@@ -6,3 +6,12 @@
 # YouTube Download Config
 
 Web app to edit a list in a Kubernetes configmap
+
+### Variables
+
+The following settings can be changed by creating environment variables
+or defining them in an `.env` file:
+
+| Variable   | Description                                                          |
+|------------|----------------------------------------------------------------------|
+| KUBECONFIG | If defined this value will be used for authentication via kubeconfig |

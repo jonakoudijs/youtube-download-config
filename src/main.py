@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 
+import os
 from bottle import get, post, request, route, run, template, static_file
 from kubernetes import client, config
+from dotenv import load_dotenv
+
+## config
+
+load_dotenv()
 
 ## routes
 
@@ -38,7 +44,10 @@ def send_static(filename):
 ## functions
 
 def read_configmap(namespace='youtube', configmap='config'):
-    config.load_kube_config()
+    if os.getenv('KUBECONFIG'):
+        config.load_kube_config()
+    else:
+        config.load_incluster_config()
     v1 = client.CoreV1Api()
 
     try:
@@ -50,7 +59,10 @@ def read_configmap(namespace='youtube', configmap='config'):
     return response
 
 def write_configmap(namespace='youtube', configmap='config', content={}):
-    config.load_kube_config()
+    if os.getenv('KUBECONFIG'):
+        config.load_kube_config()
+    else:
+        config.load_incluster_config()
     v1 = client.CoreV1Api()
 
     try:

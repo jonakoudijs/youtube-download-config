@@ -14,7 +14,8 @@ load_dotenv()
 @route('/', method=['GET','POST'])
 def index():
     add_url = False
-    err_url = False
+    error_url = False
+    duplicate_url = False
 
     try:
         subscriptions_configmap = read_configmap()
@@ -25,17 +26,20 @@ def index():
         subscriptions_list = []
 
     if request.method == 'POST':
-        subscriptions_list = subscriptions_list + [request.forms.get('url')]
-        subscriptions_string = '\n'.join(subscriptions_list)
-        subscriptions_configmap.data['batch'] = subscriptions_string
-
-        write = write_configmap(content=subscriptions_configmap)
-        if write:
-            add_url = request.forms.get('url')
+        if request.forms.get('url') in subscriptions_list:
+            duplicate_url = request.forms.get('url')
         else:
-            err_url = request.forms.get('url')
+            subscriptions_list = subscriptions_list + [request.forms.get('url')]
+            subscriptions_string = '\n'.join(subscriptions_list)
+            subscriptions_configmap.data['batch'] = subscriptions_string
 
-    return template('default', page_name='overzicht', subscriptions=subscriptions_list, add_url=add_url, err_url=err_url)
+            write = write_configmap(content=subscriptions_configmap)
+            if write:
+                add_url = request.forms.get('url')
+            else:
+                err_url = request.forms.get('url')
+
+    return template('default', page_name='overzicht', subscriptions=subscriptions_list, add_url=add_url, error_url=error_url, duplicate_url=duplicate_url)
 
 @route('/static/<filename:path>')
 def send_static(filename):

@@ -19,8 +19,11 @@
       % if add_url:
       <article style="background-color:green;"><u>{{add_url}}</u> toegevoegd!</article>
       % end
-      % if err_url:
-      <article style="background-color:red;"><u>{{err_url}}</u> toevoegen is misgegaan!</article>
+      % if error_url:
+      <article style="background-color:red;"><u>{{error_url}}</u> toevoegen is misgegaan!</article>
+      % end
+      % if duplicate_url:
+      <article style="background-color:blue;"><u>{{duplicate_url}}</u> is al toegevoegd.</article>
       % end
       <form method="post">
         <fieldset role="group">
